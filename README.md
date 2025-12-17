@@ -30,16 +30,18 @@ This project was developed as part of a MERN Stack Intern technical screening as
 
 ### User Profile
 - Profile page for logged-in users
-- Displays the user name
 - Lists events created by the user
 - Update and delete options available only on the profile page
 
 ### Event Status Display
 - Each event card shows its current status:
   - Starts in X hours/minutes
-  - Live now
   - Ended
 - Status is calculated dynamically based on the current time
+
+####################Image Uploading with Cloudinary#####################################################
+
+This project uses Cloudinary to handle event image uploads instead of storing images on the server. This approach ensures reliable image access in production environments like Render, where local file storage is not persistent.
 
 ### Frontend
 - Built using React
@@ -65,14 +67,6 @@ This project was developed as part of a MERN Stack Intern technical screening as
 - bcrypt
 
 ---
-
-## Running the Application Locally
-
-### Backend Setup
-
-
-
-
 
 ### deployment
 backend-render
