@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+
 import { useNavigate } from "react-router-dom";
 import API from "../api/api";
 import Navbar from "../components/Navbar";
@@ -35,26 +36,27 @@ function Events() {
     }
   }, [navigate]);
 
-  const fetchEvents = async () => {
-    try {
-      const res = await API.get("/events");
-      setEvents(res.data);
-      setFilteredEvents(res.data);
-    } catch (err) {
-      if (err.response?.status === 401) {
-        // token invalid or expired
-        localStorage.removeItem("token");
-        navigate("/login");
-      } else {
-        console.error("Failed to load events:", err);
-        alert("Failed to load events");
-      }
+  const fetchEvents = useCallback(async () => {
+  try {
+    const res = await API.get("/events");
+    setEvents(res.data);
+    setFilteredEvents(res.data);
+  } catch (err) {
+    if (err.response?.status === 401) {
+      localStorage.removeItem("token");
+      navigate("/login");
+    } else {
+      console.error("Failed to load events:", err);
+      alert("Failed to load events");
     }
-  };
+  }
+}, [navigate]);
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+
+useEffect(() => {
+  fetchEvents();
+}, [fetchEvents]);
+
 
   useEffect(() => {
     let filtered = [...events];
