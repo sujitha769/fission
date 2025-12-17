@@ -45,8 +45,7 @@ function EventCard({ event, refreshEvents }) {
         setStatusColor("#2563eb");
         return;
       }
-      
-      // Within 24 hours - show live countdown like a clock
+
       const hours = Math.floor(diffMinutes / 60);
       const minutes = diffMinutes % 60;
       const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
@@ -120,7 +119,7 @@ function EventCard({ event, refreshEvents }) {
       {event.imageUrl && (
         <div className="event-image">
           <img 
-            src={`http://localhost:5000${event.imageUrl}`} 
+            src={`https://fission-ij93.onrender.com${event.imageUrl}`}
             alt={event.title}
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/400x200?text=Event+Image';

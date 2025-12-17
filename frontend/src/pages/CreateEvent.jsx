@@ -78,7 +78,7 @@ function CreateEvent() {
       formData.append("category", form.category);
       formData.append("image", imageFile);
 
-      await fetch("http://localhost:5000/api/events", {
+      await fetch("https://fission-ij93.onrender.com/api/events", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

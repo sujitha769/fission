@@ -51,7 +51,7 @@ function EditEvent() {
           category: event.category || "Other"
         });
      
-        setImagePreview(`http://localhost:5000${event.imageUrl}`);
+        setImagePreview(`https://fission-ij93.onrender.com${event.imageUrl}`);
         setError(null);
       } catch (err) {
         console.error("Failed to load event:", err);
