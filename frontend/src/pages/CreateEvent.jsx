@@ -157,13 +157,19 @@ function CreateEvent() {
           <br /><br />
 
          
-          <input
-            type="datetime-local"
-            name="dateTime"
-            value={form.dateTime}
-            onChange={handleChange}
-            required
-          />
+       <label style={{ display: "block", marginBottom: "6px", fontWeight: "600" }}>
+  Event Date & Time
+</label>
+
+<input
+  type="datetime-local"
+  name="dateTime"
+  value={form.dateTime}
+  onChange={handleChange}
+  required
+  style={{ width: "100%" }}
+/>
+
 
           <br /><br />
 
