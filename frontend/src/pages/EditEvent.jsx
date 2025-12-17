@@ -22,6 +22,15 @@ function EditEvent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+  return () => {
+    if (imagePreview && imagePreview.startsWith("blob:")) {
+      URL.revokeObjectURL(imagePreview);
+    }
+  };
+}, [imagePreview]);
+
+
   const categories = [
     'Technology',
     'Business', 
@@ -51,7 +60,12 @@ function EditEvent() {
           category: event.category || "Other"
         });
      
-        setImagePreview(`https://fission-ij93.onrender.com${event.imageUrl}`);
+     setImagePreview(
+  event.imageUrl && event.imageUrl.startsWith("http")
+    ? event.imageUrl
+    : ""
+);
+
         setError(null);
       } catch (err) {
         console.error("Failed to load event:", err);
@@ -72,17 +86,13 @@ function EditEvent() {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-    
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  const file = e.target.files[0];
+  if (file) {
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

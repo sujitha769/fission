@@ -10,7 +10,7 @@ function EventCard({ event, refreshEvents }) {
   const [countdown, setCountdown] = useState("");
   const [statusColor, setStatusColor] = useState("#2563eb");
 
-  // Calculate event status with live countdown
+
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
@@ -18,21 +18,21 @@ function EventCard({ event, refreshEvents }) {
       const diffMs = start - now;
       const diffMinutes = Math.floor(diffMs / (1000 * 60));
       
-      // Event ended (assuming 2 hour duration)
+  
       if (diffMinutes <= -120) {
         setCountdown("Ended");
         setStatusColor("#6b7280");
         return;
       }
       
-      // Event is live now
+
       if (diffMinutes <= 0) {
         setCountdown("Live now");
         setStatusColor("#16a34a");
         return;
       }
       
-      // More than 24 hours away - show in days
+  
       if (diffMinutes > 1440) {
         const days = Math.floor(diffMinutes / 1440);
         const remainingHours = Math.floor((diffMinutes % 1440) / 60);
@@ -91,7 +91,7 @@ function EventCard({ event, refreshEvents }) {
 
   return (
     <div className="event-card">
-      {/* Title and countdown in same row */}
+   
       <div className="event-header">
         <h3 style={{ color: "#491997ff", fontWeight: 600, fontSize: "1.5rem" }}>
           {event.title}
@@ -101,7 +101,7 @@ function EventCard({ event, refreshEvents }) {
         </div>
       </div>
       
-      {/* Category Badge */}
+    
       <div style={{ 
         display: "inline-block", 
         padding: "4px 12px", 
@@ -115,7 +115,6 @@ function EventCard({ event, refreshEvents }) {
         {event.category || 'Other'}
       </div>
 
-      {/* Event Image */}
       {event.imageUrl && (
         <div className="event-image">
          <img
