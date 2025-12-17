@@ -1,9 +1,14 @@
 import express from "express";
 import Event from "../models/Event.js";
 import authMiddleware from "../middleware/authMiddleware.js";
-import upload from "../middleware/upload.js";
+import multer from "multer";
+import { storage } from "../config/cloudinary.js";
 
 const router = express.Router();
+
+
+const upload = multer({ storage });
+
 
 
 router.get("/my-events", authMiddleware, async (req, res) => {
@@ -16,7 +21,8 @@ router.get("/my-events", authMiddleware, async (req, res) => {
 });
 
 
-router.post("/", authMiddleware, upload.single('image'), async (req, res) => {
+
+router.post("/", authMiddleware, upload.single("image"), async (req, res) => {
   try {
     const {
       title,
@@ -31,13 +37,12 @@ router.post("/", authMiddleware, upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    let imageUrl = '';
-    if (req.file) {
-     
-      imageUrl = `/uploads/${req.file.filename}`;
-    } else {
+    if (!req.file) {
       return res.status(400).json({ message: "Image is required" });
     }
+
+  
+    const imageUrl = req.file.path;
 
     const event = await Event.create({
       title,
@@ -45,7 +50,7 @@ router.post("/", authMiddleware, upload.single('image'), async (req, res) => {
       dateTime,
       location,
       capacity: parseInt(capacity),
-      category: category || 'Other',
+      category: category || "Other",
       imageUrl,
       createdBy: req.userId,
       attendees: []
@@ -56,10 +61,14 @@ router.post("/", authMiddleware, upload.single('image'), async (req, res) => {
       event
     });
   } catch (error) {
-    console.error('Error creating event:', error);
-    res.status(500).json({ message: "Event creation failed", error: error.message });
+    console.error("Error creating event:", error);
+    res.status(500).json({
+      message: "Event creation failed",
+      error: error.message
+    });
   }
 });
+
 
 
 router.get("/", authMiddleware, async (req, res) => {
@@ -77,6 +86,7 @@ router.get("/", authMiddleware, async (req, res) => {
 });
 
 
+
 router.get("/:id", authMiddleware, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id)
@@ -88,13 +98,14 @@ router.get("/:id", authMiddleware, async (req, res) => {
 
     res.status(200).json(event);
   } catch (error) {
-    console.error('Error fetching event:', error);
+    console.error("Error fetching event:", error);
     res.status(500).json({ message: "Failed to fetch event" });
   }
 });
 
 
-router.put("/:id", authMiddleware, upload.single('image'), async (req, res) => {
+
+router.put("/:id", authMiddleware, upload.single("image"), async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
 
@@ -102,7 +113,7 @@ router.put("/:id", authMiddleware, upload.single('image'), async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
-    // Ownership check
+   
     if (event.createdBy.toString() !== req.userId) {
       return res.status(403).json({ message: "Not authorized to edit this event" });
     }
@@ -113,12 +124,12 @@ router.put("/:id", authMiddleware, upload.single('image'), async (req, res) => {
       dateTime: req.body.dateTime,
       location: req.body.location,
       capacity: parseInt(req.body.capacity),
-      category: req.body.category || event.category || 'Other'
+      category: req.body.category || event.category || "Other"
     };
 
-
+  
     if (req.file) {
-      updateData.imageUrl = `/uploads/${req.file.filename}`;
+      updateData.imageUrl = req.file.path;
     }
 
     const updatedEvent = await Event.findByIdAndUpdate(
@@ -138,6 +149,7 @@ router.put("/:id", authMiddleware, upload.single('image'), async (req, res) => {
 });
 
 
+
 router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -146,7 +158,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
- 
     if (event.createdBy.toString() !== req.userId) {
       return res.status(403).json({ message: "Not authorized to delete this event" });
     }
@@ -174,9 +185,7 @@ router.post("/:id/rsvp", authMiddleware, async (req, res) => {
         attendees: { $ne: userId },
         $expr: { $lt: [{ $size: "$attendees" }, "$capacity"] }
       },
-      {
-        $addToSet: { attendees: userId }
-      },
+      { $addToSet: { attendees: userId } },
       { new: true }
     );
 
@@ -195,14 +204,12 @@ router.post("/:id/rsvp", authMiddleware, async (req, res) => {
   }
 });
 
+
 router.post("/:id/leave", authMiddleware, async (req, res) => {
   try {
-    const eventId = req.params.id;
-    const userId = req.userId;
-
     const event = await Event.findByIdAndUpdate(
-      eventId,
-      { $pull: { attendees: userId } },
+      req.params.id,
+      { $pull: { attendees: req.userId } },
       { new: true }
     );
 
