@@ -118,13 +118,16 @@ function EventCard({ event, refreshEvents }) {
       {/* Event Image */}
       {event.imageUrl && (
         <div className="event-image">
-          <img 
-            src={`https://fission-ij93.onrender.com${event.imageUrl}`}
-            alt={event.title}
-            onError={(e) => {
-              e.target.src = 'https://via.placeholder.com/400x200?text=Event+Image';
-            }}
-          />
+         <img
+  src={event.imageUrl}
+  alt={event.title}
+  onError={(e) => {
+    e.target.onerror = null;
+    e.target.src = "/no-image.png";
+  }}
+  style={{ width: "100%", height: "200px", objectFit: "cover" }}
+/>
+
         </div>
       )}
       
