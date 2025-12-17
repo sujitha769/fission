@@ -6,7 +6,7 @@ import "../styles/events.css";
 
 function Profile() {
   const [events, setEvents] = useState([]);
-  const userName = localStorage.getItem("userName");
+  
   const navigate = useNavigate();
   const location = useLocation();
 
