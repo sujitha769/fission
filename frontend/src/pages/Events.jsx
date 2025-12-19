@@ -226,7 +226,7 @@ useEffect(() => {
           <div style={{ textAlign: "center", padding: "40px" }}>
             <p style={{ fontSize: "18px", color: "#6b7280" }}>
               {events.length === 0
-                ? "No events available yet."
+                ? "Please wait events are loading..................."
                 : "No events match your filters. Try adjusting your search."}
             </p>
           </div>
