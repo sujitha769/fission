@@ -158,7 +158,7 @@ function CreateEvent() {
 
          
        <label style={{ display: "block", marginBottom: "6px", fontWeight: "600" }}>
-  Event Date & Time
+  EventDate & Time
 </label>
 
 <input
